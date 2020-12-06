@@ -16,14 +16,13 @@ fn initialize_array(arr: &mut Vec<String>) {
 
 fn problem1(group_answers: &Vec<String>) {
     let count = group_answers.iter().fold(0, |acc, ga| -> usize {
-        let mut unique_answers = HashSet::new();
-
-        ga.chars().for_each(|c| {
-            match c {
-                'a'..='z' => { unique_answers.insert(c); },
-                _ => (),
-            };
-        });
+        let mut tmp: Vec<char> = ga
+            .chars()
+            .filter(|x| *x != '\n')
+            .collect();
+        let unique_answers: HashSet<_> = tmp
+            .drain(..)
+            .collect();
 
         acc + unique_answers.len()
     });
