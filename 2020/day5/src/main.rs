@@ -1,6 +1,8 @@
-use std::fs::File;
-use std::io::prelude::*;
+extern crate utils;
+
 use std::collections::HashSet;
+
+use utils::parse_input;
 
 #[derive(Debug)]
 struct BoardingPass {
@@ -9,7 +11,7 @@ struct BoardingPass {
     id: u16,
 }
 
-fn parse_boarding_pass(line: &str) -> BoardingPass {
+fn boarding_pass_parser(line: &str) -> BoardingPass {
     let (row_data, col_data) = line.split_at(7);
 
     let (row, _) = row_data.chars().fold((0, 127), |acc, c| -> (u8, u8) {
@@ -32,17 +34,6 @@ fn parse_boarding_pass(line: &str) -> BoardingPass {
         row,
         col,
         id: 8 * (row as u16) + col as u16,
-    }
-}
-
-fn initialize_array(arr: &mut Vec<BoardingPass>) {
-    let mut file = File::open("./input").unwrap();
-
-    let mut contents = String::new();
-    file.read_to_string(&mut contents).unwrap();
-
-    for line in contents.split('\n') {
-        arr.push(parse_boarding_pass(line));
     }
 }
 
@@ -84,8 +75,7 @@ fn problem2(boarding_passes: &Vec<BoardingPass>) {
 }
 
 fn main() {
-    let mut boarding_passes = Vec::<BoardingPass>::new();
-    initialize_array(&mut boarding_passes);
+    let boarding_passes = parse_input::<BoardingPass>("input", "\n", boarding_pass_parser);
 
     problem1(&boarding_passes);
     problem2(&boarding_passes);
