@@ -1,23 +1,9 @@
-use std::fs::File;
-use std::io::prelude::*;
+extern crate utils;
 
-fn initialize_vector(arr: &mut Vec<i32>) {
-    let mut file = File::open("./input1").unwrap();
+use utils::parse_input;
+use utils::basic_parser;
 
-    let mut contents = String::new();
-    file.read_to_string(&mut contents).unwrap();
-
-    for line in contents.split('\n') {
-        arr.push(line.parse::<i32>().unwrap());
-    }
-}
-
-fn problem2() -> Option<i32> {
-    let mut data: Vec<i32> = Vec::new();
-    initialize_vector(&mut data);
-
-    data.sort();
-
+fn problem2(data: &Vec<i32>) -> Option<i32> {
     let mut i = 0usize;
     while i < data.len(){
         let n1 = data[i];
@@ -52,12 +38,7 @@ fn problem2() -> Option<i32> {
     return None;
 }
 
-fn problem1() -> Option<i32> {
-    let mut data: Vec<i32> = Vec::new();
-    initialize_vector(&mut data);
-
-    data.sort();
-
+fn problem1(data: &Vec<i32>) -> Option<i32> {
     let mut i = 0usize;
     while i < data.len(){
         let n1 = data[i];
@@ -83,6 +64,9 @@ fn problem1() -> Option<i32> {
 }
 
 fn main() {
-    println!("Problem 1 -> {}", problem1().unwrap());
-    println!("Problem 2 -> {}", problem2().unwrap());
+    let mut data = parse_input::<i32>("input", "\n", basic_parser::<i32>);
+    data.sort();
+
+    println!("Problem 1 -> {}", problem1(&data).unwrap());
+    println!("Problem 2 -> {}", problem2(&data).unwrap());
 }
