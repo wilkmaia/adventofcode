@@ -1,7 +1,9 @@
-use std::fs::File;
-use std::io::prelude::*;
+extern crate utils;
+
 use std::collections::HashSet;
 use std::collections::HashMap;
+
+use utils::parse_input_to_vec_to_hashmap;
 
 #[derive(Debug, Clone)]
 struct HoldRule {
@@ -15,32 +17,44 @@ struct Rule {
     holded_by: Vec<String>,
 }
 
-fn update_holded_by(rules: &mut HashMap<String, Rule>, in_color: &String, color: &String) {
-    match rules.get_mut(in_color) {
-        Some(rule) => { rule.holded_by.push(String::from(color)) },
-        None => {
-            let rule = Rule {
-                holds: Vec::new(),
-                holded_by: Vec::from([String::from(color)]),
-            };
-            rules.insert(String::from(in_color), rule);
-        },
+fn get_holders_key_values(rules: &HashMap<String, Rule>) -> Vec<(String, String)> {
+    let mut tmp = Vec::<(String, String)>::new();
+
+    for (color, rule) in rules.iter() {
+        for hold_rule in rule.holds.iter() {
+            tmp.push((String::from(&hold_rule.color), String::from(color)));
+        }
+    }
+
+    tmp
+}
+
+fn update_holded_by(rules: &mut HashMap<String, Rule>, tmp: Vec<(String, String)>) {
+    for (k, v) in tmp.iter() {
+        rules.get_mut(k)
+            .unwrap()
+            .holded_by
+            .push(String::from(v));
     }
 }
 
-fn add_rule(rules: &mut HashMap<String, Rule>, rule: &str) {
+fn rule_parser(rule: &str) -> (String, Rule) {
     let words = rule.split_whitespace().collect::<Vec<&str>>();
     let color = format!("{} {}", words[0], words[1]);
 
     if words[4] == "no" {
-        return;
+        let rule = Rule {
+            holds: Vec::new(),
+            holded_by: Vec::new(),
+        };
+        return (color, rule);
     }
 
     let hold_rules = (5..(words.len())).step_by(4)
         .fold(Vec::new(), |mut r, idx| -> Vec<HoldRule> {
             let count = words[idx - 1].parse::<usize>().unwrap();
             let in_color = format!("{} {}", words[idx], words[idx+1]);
-            update_holded_by(rules, &in_color, &color);
+
             r.push(HoldRule {
                 color: in_color,
                 count,
@@ -48,27 +62,11 @@ fn add_rule(rules: &mut HashMap<String, Rule>, rule: &str) {
             r
         });
 
-    match rules.get_mut(&color) {
-        Some(rule) => { rule.holds = hold_rules },
-        None => {
-            let rule = Rule {
-                holds: hold_rules,
-                holded_by: Vec::new(),
-            };
-            rules.insert(color, rule);
-        },
-    }
-}
-
-fn initialize_rules(rules: &mut HashMap<String, Rule>) {
-    let mut file = File::open("./input").unwrap();
-
-    let mut contents = String::new();
-    file.read_to_string(&mut contents).unwrap();
-
-    for rule in contents.split("\n") {
-        add_rule(rules, rule);
-    }
+    let rule = Rule {
+        holds: hold_rules,
+        holded_by: Vec::new(),
+    };
+    (color, rule)
 }
 
 fn set_holders(rules: &mut HashMap<String, Rule>, holders: &mut HashSet<String>, holded_by: &Vec<String>) {
@@ -120,8 +118,13 @@ fn problem2(rules: &mut HashMap<String, Rule>) {
 }
 
 fn main() {
-    let mut rules = HashMap::new();
-    initialize_rules(&mut rules);
+    let mut rules = parse_input_to_hashmap::<String, Rule>(
+        "input",
+        "\n",
+        rule_parser,
+    );
+    let tmp = get_holders_key_values(&mut rules);
+    update_holded_by(&mut rules, tmp);
 
     problem1(&mut rules);
     problem2(&mut rules);
