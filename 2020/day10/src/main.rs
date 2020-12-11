@@ -1,17 +1,9 @@
-use std::fs::File;
-use std::io::prelude::*;
+extern crate utils;
+
 use std::collections::HashMap;
 
-fn initialize_vector(arr: &mut Vec<i32>) {
-    let mut file = File::open("./input").unwrap();
-
-    let mut contents = String::new();
-    file.read_to_string(&mut contents).unwrap();
-
-    for line in contents.split('\n') {
-        arr.push(line.parse::<i32>().unwrap());
-    }
-}
+use utils::parse_input_to_vec;
+use utils::basic_parser;
 
 fn problem1(joltages: &Vec<i32>) {
     let mut differences = HashMap::<i32, i32>::new();
@@ -31,8 +23,6 @@ fn problem1(joltages: &Vec<i32>) {
 
     let res = differences.get(&1).unwrap() * differences.get(&3).unwrap();
     println!("Problem 1 -> {}", res);
-
-    println!("{:?}", differences);
 }
 
 fn problem2(joltages: &Vec<i32>) {
@@ -41,8 +31,6 @@ fn problem2(joltages: &Vec<i32>) {
 
     let mut list = joltages.clone();
     list.insert(0, 0);
-
-    println!("{:?}", list);
 
     for i in 1..(list.len() - 1) {
         let curr = list[i];
@@ -63,18 +51,20 @@ fn problem2(joltages: &Vec<i32>) {
 
             if i >= 3 && next - list[i - 3] == 4 {
                 exclude += 1;
-                println!("{}", next);
             }
         }
     }
 
     let res = 2i64.pow(count - (3 * exclude)) * 7i64.pow(exclude);
-    println!("Problem 2 -> {}, {}, {}", count, exclude, res);
+    println!("Problem 2 -> {}", res);
 }
 
 fn main() {
-    let mut joltages = Vec::new();
-    initialize_vector(&mut joltages);
+    let mut joltages = parse_input_to_vec::<i32>(
+        "input",
+        "\n",
+        basic_parser::<i32>,
+    );
     joltages.sort();
 
     problem1(&joltages);
