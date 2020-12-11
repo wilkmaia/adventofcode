@@ -1,16 +1,7 @@
-use std::fs::File;
-use std::io::prelude::*;
+extern crate utils;
 
-fn initialize_array(arr: &mut Vec<String>) {
-    let mut file = File::open("./input").unwrap();
-
-    let mut contents = String::new();
-    file.read_to_string(&mut contents).unwrap();
-
-    for line in contents.split('\n') {
-        arr.push(String::from(line));
-    }
-}
+use utils::parse_input;
+use utils::basic_parser;
 
 fn solve_for_slope(matrix: &Vec<String>, slope: (usize, usize)) -> i64 {
     let cols = matrix[0].len();
@@ -40,9 +31,7 @@ fn problem2(matrix: &Vec<String>) {
 }
 
 fn main() {
-    let mut matrix = Vec::<String>::new();
-
-    initialize_array(&mut matrix);
+    let matrix = parse_input::<String>("input", "\n", basic_parser::<String>);
 
     problem1(&matrix);
     problem2(&matrix);
