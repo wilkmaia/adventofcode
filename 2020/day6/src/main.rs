@@ -1,18 +1,10 @@
-use std::fs::File;
-use std::io::prelude::*;
+extern crate utils;
+
 use std::collections::HashSet;
 use std::collections::HashMap;
 
-fn initialize_array(arr: &mut Vec<String>) {
-    let mut file = File::open("./input").unwrap();
-
-    let mut contents = String::new();
-    file.read_to_string(&mut contents).unwrap();
-
-    for group_answers in contents.split("\n\n") {
-        arr.push(String::from(group_answers));
-    }
-}
+use utils::parse_input;
+use utils::basic_parser;
 
 fn problem1(group_answers: &Vec<String>) {
     let count = group_answers.iter().fold(0, |acc, ga| -> usize {
@@ -58,8 +50,7 @@ fn problem2(group_answers: &Vec<String>) {
 }
 
 fn main() {
-    let mut group_answers = Vec::<String>::new();
-    initialize_array(&mut group_answers);
+    let group_answers = parse_input::<String>("input", "\n\n", basic_parser::<String>);
 
     problem1(&group_answers);
     problem2(&group_answers);
