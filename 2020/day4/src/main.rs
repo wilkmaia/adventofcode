@@ -1,9 +1,8 @@
-extern crate regex;
-
-use std::fs::File;
-use std::io::prelude::*;
+extern crate utils;
 
 use regex::Regex;
+
+use utils::parse_input;
 
 struct Passport {
     byr: u16,
@@ -16,43 +15,35 @@ struct Passport {
     cid: bool,
 }
 
-fn initialize_array(arr: &mut Vec<Passport>) {
-    let mut file = File::open("./input").unwrap();
+fn passport_parser(passport_entry: &str) -> Passport {
+    let mut passport = Passport {
+        byr: 0,
+        iyr: 0,
+        eyr: 0,
+        hgt: String::new(),
+        hcl: String::new(), 
+        ecl: String::new(),
+        pid: String::new(),
+        cid: false,
+    };
 
-    let mut contents = String::new();
-    file.read_to_string(&mut contents).unwrap();
-
-    contents.split("\n\n")
-        .for_each(|passport_entry| {
-            let mut passport = Passport {
-                byr: 0,
-                iyr: 0,
-                eyr: 0,
-                hgt: String::new(),
-                hcl: String::new(), 
-                ecl: String::new(),
-                pid: String::new(),
-                cid: false,
-            };
-
-            passport_entry.split_ascii_whitespace()
-                .for_each(|key_value| {
-                    let kv = key_value.split(':').collect::<Vec<&str>>();
-                    match kv[0] {
-                        "byr" => passport.byr = kv[1].parse().unwrap(),
-                        "iyr" => passport.iyr = kv[1].parse().unwrap(),
-                        "eyr" => passport.eyr = kv[1].parse().unwrap(),
-                        "hgt" => passport.hgt = String::from(kv[1]),
-                        "hcl" => passport.hcl = String::from(kv[1]),
-                        "ecl" => passport.ecl = String::from(kv[1]),
-                        "pid" => passport.pid = String::from(kv[1]),
-                        "cid" => passport.cid = true,
-                        _ => (),
-                    }
-                });
-
-            arr.push(passport);
+    passport_entry.split_ascii_whitespace()
+        .for_each(|key_value| {
+            let kv = key_value.split(':').collect::<Vec<&str>>();
+            match kv[0] {
+                "byr" => passport.byr = kv[1].parse().unwrap(),
+                "iyr" => passport.iyr = kv[1].parse().unwrap(),
+                "eyr" => passport.eyr = kv[1].parse().unwrap(),
+                "hgt" => passport.hgt = String::from(kv[1]),
+                "hcl" => passport.hcl = String::from(kv[1]),
+                "ecl" => passport.ecl = String::from(kv[1]),
+                "pid" => passport.pid = String::from(kv[1]),
+                "cid" => passport.cid = true,
+                _ => (),
+            }
         });
+
+    passport
 }
 
 // Compare against default values
@@ -105,8 +96,7 @@ fn problem2(passports: &Vec<Passport>) {
 }
 
 fn main() {
-    let mut passports = Vec::<Passport>::new();
-    initialize_array(&mut passports);
+    let passports = parse_input::<Passport>("input", "\n\n", passport_parser);
 
     problem1(&passports);
     problem2(&passports);
