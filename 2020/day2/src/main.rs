@@ -1,5 +1,6 @@
-use std::fs::File;
-use std::io::prelude::*;
+extern crate utils;
+
+use utils::parse_input;
 
 struct PasswordRule {
     min: u32,
@@ -12,7 +13,7 @@ struct Password {
     password: String,
 }
 
-fn get_password(line: &str) -> Password {
+fn password_parser(line: &str) -> Password {
     let min_str = line.split('-').collect::<Vec<&str>>()[0];
     let max_str = line.split('-').collect::<Vec<&str>>()[1].split(' ').collect::<Vec<&str>>()[0];
     let letter = String::from(line.split(':').collect::<Vec<&str>>()[0]).pop().unwrap();
@@ -25,17 +26,6 @@ fn get_password(line: &str) -> Password {
             letter,
         },
         password,
-    }
-}
-
-fn initialize_array(arr: &mut Vec<Password>) {
-    let mut file = File::open("./input").unwrap();
-
-    let mut contents = String::new();
-    file.read_to_string(&mut contents).unwrap();
-
-    for line in contents.split('\n') {
-        arr.push(get_password(line));
     }
 }
 
@@ -83,8 +73,7 @@ fn problem2(passwords: &Vec<Password>) {
 }
 
 fn main() {
-    let mut passwords = Vec::<Password>::new();
-    initialize_array(&mut passwords);
+    let passwords = parse_input::<Password>("input", "\n", password_parser);
 
     problem1(&passwords);
     problem2(&passwords);
