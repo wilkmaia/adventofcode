@@ -1,18 +1,9 @@
-use std::fs::File;
-use std::io::prelude::*;
+extern crate utils;
+
+use utils::parse_input_to_vec;
+use utils::basic_parser;
 
 const PREAMBLE_SIZE: usize = 25;
-
-fn initialize_array(arr: &mut Vec<i64>) {
-    let mut file = File::open("./input").unwrap();
-
-    let mut contents = String::new();
-    file.read_to_string(&mut contents).unwrap();
-
-    for line in contents.split('\n') {
-        arr.push(line.parse::<i64>().unwrap());
-    }
-}
 
 fn is_sum_possible(pool: &Vec<&i64>, sum: i64) -> bool {
     let mut sorted_pool = pool.clone();
@@ -104,8 +95,7 @@ fn problem2(numbers: &Vec<i64>) {
 }
 
 fn main() {
-    let mut numbers = Vec::new();
-    initialize_array(&mut numbers);
+    let numbers = parse_input_to_vec::<i64>("input", "\n", basic_parser::<i64>);
 
     problem1(&numbers);
     problem2(&numbers);
