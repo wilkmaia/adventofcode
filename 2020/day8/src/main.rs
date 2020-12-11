@@ -1,6 +1,8 @@
-use std::fs::File;
-use std::io::prelude::*;
+extern crate utils;
+
 use std::collections::HashSet;
+
+use utils::parse_input_to_vec;
 
 #[derive(Debug, PartialEq)]
 enum OpCode {
@@ -16,7 +18,7 @@ struct Instruction {
     value: i32,
 }
 
-fn parse_instruction(line: &str) -> Instruction {
+fn instruction_parser(line: &str) -> Instruction {
     let mut words_iter = line.split_whitespace();
 
     let opcode = match words_iter.next() {
@@ -31,17 +33,6 @@ fn parse_instruction(line: &str) -> Instruction {
     Instruction {
         opcode,
         value,
-    }
-}
-
-fn initialize_array(arr: &mut Vec<Instruction>) {
-    let mut file = File::open("./input").unwrap();
-
-    let mut contents = String::new();
-    file.read_to_string(&mut contents).unwrap();
-
-    for line in contents.split('\n') {
-        arr.push(parse_instruction(line));
     }
 }
 
@@ -118,9 +109,11 @@ fn problem2(instructions: &Vec<Instruction>) {
 }
 
 fn main() {
-    let mut instructions = Vec::new();
-
-    initialize_array(&mut instructions);
+    let instructions = parse_input_to_vec::<Instruction>(
+        "input",
+        "\n",
+        instruction_parser,
+    );
 
     problem1(&instructions);
     problem2(&instructions);
