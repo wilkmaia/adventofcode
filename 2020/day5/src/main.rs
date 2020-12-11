@@ -2,7 +2,7 @@ extern crate utils;
 
 use std::collections::HashSet;
 
-use utils::parse_input;
+use utils::parse_input_to_vec;
 
 #[derive(Debug)]
 struct BoardingPass {
@@ -75,7 +75,7 @@ fn problem2(boarding_passes: &Vec<BoardingPass>) {
 }
 
 fn main() {
-    let boarding_passes = parse_input::<BoardingPass>("input", "\n", boarding_pass_parser);
+    let boarding_passes = parse_input_to_vec::<BoardingPass>("input", "\n", boarding_pass_parser);
 
     problem1(&boarding_passes);
     problem2(&boarding_passes);

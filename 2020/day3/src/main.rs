@@ -1,6 +1,6 @@
 extern crate utils;
 
-use utils::parse_input;
+use utils::parse_input_to_vec;
 use utils::basic_parser;
 
 fn solve_for_slope(matrix: &Vec<String>, slope: (usize, usize)) -> i64 {
@@ -31,7 +31,7 @@ fn problem2(matrix: &Vec<String>) {
 }
 
 fn main() {
-    let matrix = parse_input::<String>("input", "\n", basic_parser::<String>);
+    let matrix = parse_input_to_vec::<String>("input", "\n", basic_parser::<String>);
 
     problem1(&matrix);
     problem2(&matrix);

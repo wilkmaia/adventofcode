@@ -1,6 +1,6 @@
 extern crate utils;
 
-use utils::parse_input;
+use utils::parse_input_to_vec;
 use utils::basic_parser;
 
 const TARGET: i32 = 2020;
@@ -54,7 +54,7 @@ fn problem2(data: &Vec<i32>) {
 }
 
 fn main() {
-    let mut data = parse_input::<i32>("input", "\n", basic_parser::<i32>);
+    let mut data = parse_input_to_vec::<i32>("input", "\n", basic_parser::<i32>);
     data.sort();
 
     problem1(&data);

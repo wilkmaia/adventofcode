@@ -1,6 +1,6 @@
 extern crate utils;
 
-use utils::parse_input;
+use utils::parse_input_to_vec;
 
 struct PasswordRule {
     min: u32,
@@ -73,7 +73,7 @@ fn problem2(passwords: &Vec<Password>) {
 }
 
 fn main() {
-    let passwords = parse_input::<Password>("input", "\n", password_parser);
+    let passwords = parse_input_to_vec::<Password>("input", "\n", password_parser);
 
     problem1(&passwords);
     problem2(&passwords);

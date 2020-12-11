@@ -3,7 +3,7 @@ extern crate utils;
 use std::collections::HashSet;
 use std::collections::HashMap;
 
-use utils::parse_input;
+use utils::parse_input_to_vec;
 use utils::basic_parser;
 
 fn problem1(group_answers: &Vec<String>) {
@@ -50,7 +50,7 @@ fn problem2(group_answers: &Vec<String>) {
 }
 
 fn main() {
-    let group_answers = parse_input::<String>("input", "\n\n", basic_parser::<String>);
+    let group_answers = parse_input_to_vec::<String>("input", "\n\n", basic_parser::<String>);
 
     problem1(&group_answers);
     problem2(&group_answers);

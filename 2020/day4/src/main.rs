@@ -2,7 +2,7 @@ extern crate utils;
 
 use regex::Regex;
 
-use utils::parse_input;
+use utils::parse_input_to_vec;
 
 struct Passport {
     byr: u16,
@@ -96,7 +96,7 @@ fn problem2(passports: &Vec<Passport>) {
 }
 
 fn main() {
-    let passports = parse_input::<Passport>("input", "\n\n", passport_parser);
+    let passports = parse_input_to_vec::<Passport>("input", "\n\n", passport_parser);
 
     problem1(&passports);
     problem2(&passports);
