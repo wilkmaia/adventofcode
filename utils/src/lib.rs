@@ -7,18 +7,23 @@ mod parsers;
 
 pub use parsers::basic_parser;
 
+fn read_file_contents(filename: &str) -> String {
+    let mut file = File::open(filename).unwrap();
+    let mut contents = String::new();
+    file.read_to_string(&mut contents).unwrap();
+
+    contents
+}
+
 pub fn parse_input_to_vec<T>(
     filename: &str,
     sep: &str,
     parser: fn(&str) -> T,
 ) -> Vec<T>
 {
-    let mut file = File::open(filename).unwrap();
     let mut result = Vec::<T>::new();
 
-    let mut contents = String::new();
-    file.read_to_string(&mut contents).unwrap();
-
+    let contents = read_file_contents(filename);
     for line in contents.split(sep) {
         result.push(parser(line));
     }
@@ -34,12 +39,9 @@ pub fn parse_input_to_hashmap<K, V>(
 where
     K: Eq + Hash,
 {
-    let mut file = File::open(filename).unwrap();
     let mut result = HashMap::<K, V>::new();
 
-    let mut contents = String::new();
-    file.read_to_string(&mut contents).unwrap();
-
+    let contents = read_file_contents(filename);
     for line in contents.split(sep) {
         let tmp = parser(line);
         result.insert(tmp.0, tmp.1);
