@@ -50,6 +50,15 @@ where
     result
 }
 
+pub fn parse_input<T>(
+    filename: &str,
+    parser: fn(String) -> T,
+) -> T
+{
+    let contents = read_file_contents(filename);
+    parser(contents)
+}
+
 #[cfg(test)]
 mod tests {
     #[test]
