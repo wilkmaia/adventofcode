@@ -1,7 +1,7 @@
-use std::fs::File;
-use std::io::prelude::*;
 use std::collections::HashMap;
+use std::fs::File;
 use std::hash::Hash;
+use std::io::prelude::*;
 
 mod parsers;
 
@@ -15,17 +15,14 @@ fn read_file_contents(filename: &str) -> String {
     contents
 }
 
-pub fn parse_input_to_vec<T>(
-    filename: &str,
-    sep: &str,
-    parser: fn(&str) -> T,
-) -> Vec<T>
-{
+pub fn parse_input_to_vec<T>(filename: &str, sep: &str, parser: fn(&str) -> T) -> Vec<T> {
     let mut result = Vec::<T>::new();
 
     let contents = read_file_contents(filename);
     for line in contents.split(sep) {
-        result.push(parser(line));
+        if line != "" {
+            result.push(parser(line));
+        }
     }
 
     result
@@ -50,11 +47,7 @@ where
     result
 }
 
-pub fn parse_input<T>(
-    filename: &str,
-    parser: fn(String) -> T,
-) -> T
-{
+pub fn parse_input<T>(filename: &str, parser: fn(String) -> T) -> T {
     let contents = read_file_contents(filename);
     parser(contents)
 }

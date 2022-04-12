@@ -1,5 +1,5 @@
-use std::str::FromStr;
 use std::fmt::Debug;
+use std::str::FromStr;
 
 pub fn basic_parser<T>(line: &str) -> T
 where
@@ -8,4 +8,3 @@ where
 {
     line.parse::<T>().unwrap()
 }
-
